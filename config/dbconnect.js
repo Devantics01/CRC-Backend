@@ -5,7 +5,7 @@ dotenv.config()
 const sequelize = new Sequelize(process.env.DBNAME, process.env.DBUSERNAME, process.env.DBPASS,
   {
     dialect: 'postgres',
-    host: 'localhost',
+    host: process.env.DBHOST,
     port: 5432,
     ssl: true
   }
