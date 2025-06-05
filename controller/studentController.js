@@ -134,7 +134,7 @@ export const updateStudentInfo = async(data)=>{
 
 export const deleteStudent = async(data)=>{
     try {
-        await student.delete({
+        await student.destroy({
             where: {
                 email: data.email,
             }
