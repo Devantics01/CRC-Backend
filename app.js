@@ -1,30 +1,26 @@
 import express from 'express';
-import userRoutes from './routes/userRoutes.js';
-import lecturerRoutes from './routes/lecturerRoutes.js';
-import hodRoutes from './routes/hodRoutes.js';
-import courseRoutes from './routes/courseRoutes.js';
-import tokenRoutes from './routes/tokenRoutes.js';
-
 import dotenv from 'dotenv';
-
-const app = express();
-const port = 3000;
+import studentRoute from './routes/studentRoute.js';
+import lecturerRoute from './routes/lecturerRoute.js';
+import tokenRoute from './routes/tokenRoute.js';
+import otpRoute from './routes/otpRoute.js';
 
 dotenv.config();
-app.use(express.json())
-app.set('view engine', 'ejs');
-app.use(express.urlencoded({extended: true}))
+const port = process.env.PORT || 3004;
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 app.get('/', (req, res)=>{
-  res.send('welcome to Courseware Cloud');
-});
+    res.send('welcome to CRC Backend :)');
+})
 
-app.use('/student', userRoutes);
-app.use('/lecturer', lecturerRoutes);
-app.use('/hod', hodRoutes);
-app.use('/course', courseRoutes);
-app.use('/', tokenRoutes);
+app.use('/student', studentRoute);
+app.use('/lecturer', lecturerRoute);
+app.use('/token', tokenRoute);
+app.use('/otp', otpRoute);
 
-app.listen(3000, ()=>{
-  console.log(`server running on http://localhost:${port}`);
+app.listen(port, ()=>{
+    console.log(`server running at on port ${port}`);
 });
