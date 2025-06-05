@@ -4,7 +4,7 @@ import { generateToken } from '../config/token.js';
 import {createStudent, findStudent, getStudentPayload, getStudentInfo, updateStudentInfo, updateStudentAcctStatus, deleteStudent } from '../controller/studentController.js';
 import { sendVerificationMail } from '../helper/emailHelper.js';
 import { generateOtp } from '../helper/otpGenerator.js';
-import { confirmOTP } from '../controller/otpController.js';
+import { confirmOTP, deleteOTP } from '../controller/otpController.js';
 import { authenticateToken, authorizeStudent } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
