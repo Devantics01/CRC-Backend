@@ -2,7 +2,20 @@ import Sequelize from 'sequelize';
 import dotenv from 'dotenv';
 
 dotenv.config()
-const sequelize = new Sequelize(process.env.DB_URL);
+const sequelize = new Sequelize({
+  database: process.env.DBNAME,
+  username: process.env.DBUSER,
+  password: process.env.DBPASS,
+  host: process.env.DBHOST,
+  port: 5432,
+  dialect: "postgres",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  }
+});
 
   sequelize.authenticate().then(() => {
    console.log('Connection has been established successfully.');
