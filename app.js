@@ -4,6 +4,7 @@ import studentRoute from './routes/studentRoute.js';
 import lecturerRoute from './routes/lecturerRoute.js';
 import tokenRoute from './routes/tokenRoute.js';
 import otpRoute from './routes/otpRoute.js';
+import hodRoutes from './routes/hodRoutes.js';
 
 dotenv.config();
 const port = process.env.PORT || 3004;
@@ -20,6 +21,7 @@ app.use('/student', studentRoute);
 app.use('/lecturer', lecturerRoute);
 app.use('/token', tokenRoute);
 app.use('/otp', otpRoute);
+app.use('/hod', hodRoutes);
 
 app.listen(port, ()=>{
     console.log(`server running at on port ${port}`);

@@ -1,5 +1,4 @@
 import { deleteOTP, registerOTP } from "../controller/otpController.js";
-import cron from 'node-cron';
 
 const generateOtpCode = ()=>{
     const characters ='0123456789';
