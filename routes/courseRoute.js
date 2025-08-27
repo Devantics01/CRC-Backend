@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticateToken, authorizeHOD, authorizeLecturer, authorizeUser } from '../middleware/authMiddleware';
+import { authenticateToken, authorizeHOD, authorizeLecturer, authorizeUser } from '../middleware/authMiddleware.js';
 import { uploadDoc } from '../helper/upload.js';
 import { createCourse, getCourse, getCourseInBulk, updateCourseMaterial, updateCourseAssignment, updateCourseInfo, updateCourseResources, approveCourseMaterial, deleteCourse } from '../controller/courseController.js';
 
