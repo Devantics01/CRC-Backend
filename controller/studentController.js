@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import student from "../model/studentModel.js";
 import bcryptjs from "bcryptjs";
 
@@ -95,6 +96,19 @@ export const getStudentInfo = async(data)=>{
         return {error: err};
     };
 };
+
+export const getStudentCount = async(data)=>{
+    try {
+        const res = await student.findAll({
+            where: {
+                department: data.department
+            }
+        });
+        return {status: true, value: res.length};
+    } catch (err) {
+        return {error: err};
+    }
+}
 
 export const updateStudentAcctStatus = async(data)=>{
     try {
