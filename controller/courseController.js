@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import course from "../model/courseModel";
+import course from "../model/courseModel.js ";
 
 export const createCourse = async(data)=>{
     try {
