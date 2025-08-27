@@ -1,6 +1,7 @@
 import student from "../model/studentModel.js";
 import bcryptjs from "bcryptjs";
 
+
 export const createStudent = async(data)=>{
     try {
         await student.create({

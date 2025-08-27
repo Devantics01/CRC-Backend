@@ -31,6 +31,10 @@ const hod = sequelize.define('hods', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  academicYear: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   acctStatus: {
     type: DataTypes.STRING,
     allowNull: false

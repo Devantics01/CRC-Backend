@@ -13,6 +13,7 @@ export const createLecturer = async(data)=>{
             levelsTaught: data.levelsTaught,
             staffID: data.staffID,
             assignedCourses: data.assignedCourses,
+            hodApproval: 'pending',
             acctStatus: 'pending',
             role: 'lecturer'
         })
@@ -58,8 +59,11 @@ export const getLecturerPayload = async(data)=>{
         } else {
             return {
                 username: res.dataValues.username,
+                hodApproval: res.dataValues.hodApproval,
                 email: res.dataValues.email,
                 department: res.dataValues.department,
+                acctStatus: res.dataValues.acctStatus,
+                hodApproval: res.dataValues.hodApproval,
                 role: res.dataValues.role
             };
         }
@@ -94,10 +98,52 @@ export const getLecturerInfo = async(data)=>{
     };
 };
 
+export const getLecturersByDepartment = async(data)=>{
+    try {
+        const res = await lecturer.findAll({
+            where: {
+                department: data.department
+            }
+        });
+        if (res == null) {
+            return {error: 'no lecturers found'};
+        } else {
+            let lecturerList = [];
+            let i = 0;
+            while(i < res.length){
+                lecturerList.push(JSON.stringify({
+                    username: res[i].dataValues.username,
+                    staffID: res[i].dataValues.staffID,
+                    levelsTaught: res[i].dataValues.levelsTaught
+                }));
+            }
+            return {status: true, list: lecturerList};
+        };
+    } catch (err) {
+        console.log(err);
+        return {error: err};
+    };
+};
+
 export const updateLecturerAcctStatus = async(data)=>{
     try {
         await lecturer.update({
             acctStatus: data.acctStatus,
+        }, {
+            where: {
+                email: data.email
+            }
+        });
+        return true;
+    } catch (err) {
+        return err;
+    }
+}
+
+export const updateHODApproval = async(data)=>{
+    try {
+        await lecturer.update({
+            hodApproval: 'approved'
         }, {
             where: {
                 email: data.email

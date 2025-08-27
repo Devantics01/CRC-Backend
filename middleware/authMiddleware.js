@@ -36,6 +36,14 @@ export const authorizeHOD = (req, res, next)=>{
   };
 };
 
+export const authorizeUploader = (req, res, next)=>{
+  if(req.user.role == 'hod' || req.user.role == 'lecturer'){
+    next();
+  } else{
+    res.json({msg: 'access denied'});
+  };
+};
+
 export const authorizeAdmin = (req, res, next)=>{
   if(req.user.role == 'admin'){
     next();

@@ -39,6 +39,10 @@ const lecturer = sequelize.define('lecturers', {
     type: DataTypes.JSON,
     allowNull: false
   },
+  hodApproval: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   role: {
     type: DataTypes.STRING,
     allowNull: false

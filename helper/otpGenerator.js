@@ -8,7 +8,7 @@ const generateOtpCode = ()=>{
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
-}
+};
 
 export const generateOtp = async(email)=>{
     const code = generateOtpCode();
@@ -20,4 +20,14 @@ export const generateOtp = async(email)=>{
     } catch (err) {
         console.log( err);
     }
-}
+};
+
+export const generateChatID = ()=>{
+    const characters ='0123456789abcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < 7; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+};

@@ -125,7 +125,10 @@ router.get('/profile', [authenticateToken, authorizeStudent], async (req, res)=>
             })
         }
     } catch (error) {
-        
+        res.json({
+                msg: 'failed',
+                err: error
+            })
     }
 });
 

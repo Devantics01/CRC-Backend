@@ -6,6 +6,9 @@ import { sendVerificationMail } from '../helper/emailHelper.js';
 import { generateOtp } from '../helper/otpGenerator.js';
 import { confirmOTP, deleteOTP } from '../controller/otpController.js';
 import { authenticateToken, authorizeHOD } from '../middleware/authMiddleware.js';
+import { getLecturersByDepartment } from '../controller/lecturerController.js';
+import { getStudentCount } from '../controller/studentController.js';
+
 
 const router = express.Router();
 
@@ -19,7 +22,7 @@ router.post('/new', async(req, res)=>{
             faculty: req.body.faculty,
             password: hashedPassword,
             department: req.body.department,
-            coursesManaged: req.body.coursesManaged,
+            academicYear: req.body.academicYear
         });
         if (createdHOD == true) {
             const otpCode = await generateOtp(req.body.email);
@@ -120,10 +123,59 @@ router.get('/profile', [authenticateToken, authorizeHOD], async (req, res)=>{
                 profileInfo: hODProfile
             })
         }
-    } catch (error) {
+    } catch (err) {
         res.json({
-            err: error
-        })
+            msg: 'error',
+            error: err
+        });
+    }
+});
+
+router.get('/lecturers', [authenticateToken, authorizeHOD], async(req, res)=>{
+    try {
+        const lecturers = await getLecturersByDepartment({
+            department: req.user.department
+        });
+        if (lecturers.status == true) {
+            res.json({
+                msg: 'success',
+                lecturers: lecturers.list
+            });
+        } else {
+            res.json({
+                msg: 'failed',
+                err: lecturers.error
+            });
+        };
+    } catch (err) {
+        res.json({
+            msg: 'error',
+            error: err
+        });
+    }
+});
+
+router.get('/studentCount', [authenticateToken, authorizeHOD], async(req, res)=>{
+    try {
+        const count = await getStudentCount({
+            department: req.user.department
+        });
+        if (count.status == true) {
+            res.json({
+                msg: 'success',
+                noOfstudent: count.value
+            });
+        } else {
+            res.json({
+                msg: 'failed',
+                err: count.error
+            });
+        };
+    } catch (err) {
+        res.json({
+            msg: 'error',
+            error: err
+        });
     }
 });
 
@@ -131,8 +183,9 @@ router.put('/update', [authenticateToken, authorizeHOD], async (req, res)=>{
     try {
         const updated = await updateHODInfo({
             email: req.user.email,
-            coursesManaged: req.body.coursesManaged,
-            notesTaken: req.body.notesTaken
+            academicYear: req.body.academicYear,
+            department: req.body.department,
+            faculty: req.body.faculty
         })
         if (updated == true) {
             res.json({msg: 'profile updated successfully'});
@@ -143,6 +196,7 @@ router.put('/update', [authenticateToken, authorizeHOD], async (req, res)=>{
         res.json({msg: 'error', err: error});
     }
 })
+
 
 router.delete('/delete', [authenticateToken, authorizeHOD], async (req, res)=>{
     try {

@@ -10,7 +10,7 @@ export const createHOD = async(data)=>{
             department: data.department,
             faculty: data.faculty,
             coursesManaged: data.coursesManaged,
-            notesTaken: '{}',
+            academicYear: data.academicYear,
             acctStatus: 'pending',
             role: 'hod',
         })
@@ -80,8 +80,7 @@ export const getHODInfo = async(data)=>{
                 username: res.dataValues.username,
                 department: res.dataValues.department,
                 faculty: res.dataValues.faculty,
-                coursesManaged: res.dataValues.coursesManaged,
-                notesTaken: res.dataValues.notesTaken
+                coursesManaged: res.dataValues.coursesManaged
             };
         };
     } catch (err) {
@@ -109,8 +108,9 @@ export const updateHODAcctStatus = async(data)=>{
 export const updateHODInfo = async(data)=>{
     try {
         await hod.update({
-            coursesManaged: data.coursesManaged,
-            notesTaken: data.notesTaken
+            academicYear: data.academicYear,
+            department: data.department,
+            faculty: data.faculty
         }, {
             where: {
                 email: data.email,
