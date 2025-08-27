@@ -8,6 +8,7 @@ export const createCourse = async(data)=>{
             course_code: data.course_code,
             department: data.department,
             level: data.level,
+            assignment: '',
             faculty: data.faculty,
             course_description: data.course_description,
             resourceApproval: 'pending'
@@ -132,6 +133,20 @@ export const approveCourseMaterial = async(data)=>{
     }
 };
 
+export const updateCourseAssignment = async(data)=>{
+    try {
+        await course.update({
+            assignment: data.assignment
+        }, {
+            where: {
+                course_code: data.course_code
+            }
+        })
+        return true;
+    } catch (err) {
+        return {error: err};
+    }
+}
 
 export const deleteCourse = async(data)=>{
     try {
