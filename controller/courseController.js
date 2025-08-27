@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Op, where } from "sequelize";
 import course from "../model/courseModel.js ";
 
 export const createCourse = async(data)=>{
@@ -131,3 +131,17 @@ export const approveCourseMaterial = async(data)=>{
         return {error: err};
     }
 };
+
+
+export const deleteCourse = async(data)=>{
+    try {
+        await course.destroy({
+            where:{
+                course_code: data.course_code
+            }
+        });
+        return true;
+    } catch (err) {
+        
+    }
+}
