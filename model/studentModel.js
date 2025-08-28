@@ -35,10 +35,6 @@ const student = sequelize.define('students', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  academicYear: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
   role: {
     type: DataTypes.STRING,
     allowNull: false
