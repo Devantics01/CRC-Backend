@@ -21,9 +21,7 @@ router.post('/new', async(req, res)=>{
             password: hashedPassword,
             department: req.body.department,
             program: req.body.program,
-            registeredCourses: req.body.registeredCourses,
-            matricNumber: req.body.matricNumber,
-            academicYear: req.body.academicYear
+            matricNumber: req.body.matricNumber
         });
         if (createdStudent == true) {
             const otpCode = await generateOtp(req.body.email);
@@ -131,6 +129,8 @@ router.get('/profile', [authenticateToken, authorizeStudent], async (req, res)=>
             })
     }
 });
+
+router.put('/')
 
 router.put('/update', [authenticateToken, authorizeStudent], async (req, res)=>{
     try {

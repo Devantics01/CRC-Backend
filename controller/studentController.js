@@ -12,12 +12,9 @@ export const createStudent = async(data)=>{
             password: data.password,
             department: data.department,
             faculty: data.faculty,
-            registeredCourses: data.registeredCourses,
             matricNumber: data.matricNumber,
             acctStatus: 'pending',
-            role: 'student',
-            program: data.program,
-            academicYear: data.academicYear
+            role: 'student'
         })
         return true;
     } catch (err) {
@@ -46,6 +43,20 @@ export const findStudent = async(data)=>{
         };
     } catch (err) {
         return {msg: err};
+    }
+}
+
+export const registerCourse = async(data)=>{
+    try {
+        await student.update({
+            registeredCourse: data.registeredCourse
+        }, {
+            where: {
+                email: data.email
+            }
+        })
+    } catch (err) {
+        
     }
 }
 
@@ -88,7 +99,6 @@ export const getStudentInfo = async(data)=>{
                 department: res.dataValues.department,
                 faculty: res.dataValues.faculty,
                 program: res.dataValues.program,
-                registeredCourses: res.dataValues.registeredCourses,
                 academicYear: res.dataValues.academicYear
             };
         };

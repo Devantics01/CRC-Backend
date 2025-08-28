@@ -179,6 +179,7 @@ router.get('/studentCount', [authenticateToken, authorizeHOD], async(req, res)=>
     }
 });
 
+
 router.put('/update', [authenticateToken, authorizeHOD], async (req, res)=>{
     try {
         const updated = await updateHODInfo({
