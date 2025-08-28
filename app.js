@@ -6,6 +6,7 @@ import tokenRoute from './routes/tokenRoute.js';
 import otpRoute from './routes/otpRoute.js';
 import hodRoutes from './routes/hodRoutes.js';
 import courseRoutes from './routes/courseRoute.js';
+import cors from 'cors';
 
 dotenv.config();
 const port = process.env.PORT || 3004;
@@ -24,6 +25,12 @@ app.use('/token', tokenRoute);
 app.use('/otp', otpRoute);
 app.use('/hod', hodRoutes);
 app.use('/course', courseRoutes);
+
+app.use(cors({
+    origin: ["https://crc-backend-vm4p.onrender.com"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
 
 app.listen(port, ()=>{
     console.log(`server running at on port ${port}`);
