@@ -1,7 +1,7 @@
 import express from 'express';
 import bcryptjs from 'bcryptjs';
 import { generateToken } from '../config/token.js';
-import {createStudent, findStudent, getStudentPayload, getStudentInfo, updateStudentInfo, updateStudentAcctStatus, deleteStudent } from '../controller/studentController.js';
+import {createStudent, findStudent, registerCourse, getStudentPayload, getStudentInfo, updateStudentInfo, updateStudentAcctStatus, deleteStudent } from '../controller/studentController.js';
 import { sendVerificationMail } from '../helper/emailHelper.js';
 import { generateOtp } from '../helper/otpGenerator.js';
 import { confirmOTP, deleteOTP } from '../controller/otpController.js';
@@ -130,7 +130,16 @@ router.get('/profile', [authenticateToken, authorizeStudent], async (req, res)=>
     }
 });
 
-router.put('/')
+router.put('/register-course', [authenticateToken, authorizeStudent], async(req, res)=>{
+    try {
+        const registered = await registerCourse({
+            email: req.user.email,
+            registeredCourses: req.body.registeredCourses
+        })  
+    } catch (err) {
+        
+    }
+})
 
 router.put('/update', [authenticateToken, authorizeStudent], async (req, res)=>{
     try {

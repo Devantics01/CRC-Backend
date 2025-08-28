@@ -23,10 +23,6 @@ const student = sequelize.define('students', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  program: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
   registeredCourses: {
     type: DataTypes.JSON,
     allowNull: false
