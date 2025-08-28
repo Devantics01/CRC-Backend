@@ -25,7 +25,7 @@ const student = sequelize.define('students', {
   },
   registeredCourses: {
     type: DataTypes.JSON,
-    allowNull: false
+    allowNull: true
   },
   matricNumber: {
     type: DataTypes.STRING,
