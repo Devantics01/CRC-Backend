@@ -25,7 +25,7 @@ router.post('/new', async(req, res)=>{
         });
         if (createdStudent == true) {
             const otpCode = await generateOtp(req.body.email);
-            setTimeout(async()=>{const deleted = await deleteOTP({otp_code: otpCode})}, 60000);
+            setTimeout(async()=>{const deleted = await deleteOTP({otp_code: otpCode})}, 300000);
             const sentMail = sendVerificationMail(req.body.email, otpCode);
             if (sentMail == true) {
                 res.json({msg: 'success', info: 'OTP sent to mail'}).sendStatus(201);
