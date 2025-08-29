@@ -8,6 +8,7 @@ const hod = sequelize.define('hods', {
   },
   email: {
     type: DataTypes.STRING,
+    unique: true,
     allowNull: false
   },
   password: {
@@ -20,10 +21,6 @@ const hod = sequelize.define('hods', {
     allowNull: false
   },
   coursesManaged: {
-    type: DataTypes.JSON,
-    allowNull: false
-  },
-  notesTaken: {
     type: DataTypes.JSON,
     allowNull: false
   },

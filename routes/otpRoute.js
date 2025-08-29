@@ -8,7 +8,7 @@ router.post('/new', async(req, res)=>{
     try {
         const otpCode = await generateOtp(req.body.email);
         setTimeout(async()=>{
-            const deleted = await deleteOTP({otp_code: otpCode})}, 60000);
+            const deleted = await deleteOTP({otp_code: otpCode})}, 300000);
         const sentMail = sendVerificationMail(req.body.email, otpCode);
         if (sentMail == true) {
             res.json({msg: 'success'}).sendStatus(201);

@@ -35,13 +35,18 @@ export const findStudent = async(data)=>{
         } else {
             const isMatch = await bcryptjs.compare(data.password, res.dataValues.password);
             if (isMatch == true) {
-                return true;
+                if (res.dataValues.acctStatus == 'approved') {
+                    return true;
+                } else {
+                    return {msg: 'unverified account'};
+                }
             }
             else {
                 return {msg: 'incorrect password'};
             };
         };
     } catch (err) {
+        console.log(err);
         return {msg: err};
     }
 }
@@ -49,14 +54,15 @@ export const findStudent = async(data)=>{
 export const registerCourse = async(data)=>{
     try {
         await student.update({
-            registeredCourse: data.registeredCourse
+            registeredCourses: data.registeredCourses
         }, {
             where: {
                 email: data.email
             }
-        })
+        });
+        return true;
     } catch (err) {
-        
+        return err;
     }
 }
 
@@ -97,9 +103,7 @@ export const getStudentInfo = async(data)=>{
                 level: res.dataValues.level,
                 matricNumber: res.dataValues.matricNumber,
                 department: res.dataValues.department,
-                faculty: res.dataValues.faculty,
-                program: res.dataValues.program,
-                academicYear: res.dataValues.academicYear
+                registerCourses: res.dataValues.registeredCourses
             };
         };
     } catch (err) {
@@ -164,7 +168,9 @@ export const deleteStudent = async(data)=>{
                 email: data.email,
             }
         })
+        return true;
     } catch (err) {
+        console.log(err);
         return err;
     }
 }

@@ -8,6 +8,7 @@ const student = sequelize.define('students', {
   },
   email: {
     type: DataTypes.STRING,
+    unique: true,
     allowNull: false
   },
   password: {
@@ -29,7 +30,7 @@ const student = sequelize.define('students', {
   },
   matricNumber: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   acctStatus: {
     type: DataTypes.STRING,

@@ -30,18 +30,21 @@ export const findLecturer = async(data)=>{
                 email: data.email
             }
         });
-        console.log(res);
         if (res == null) {
-            return {msg: 'account not found'};
-        } else {
-            const isMatch = await bcryptjs.compare(data.password, res.dataValues.password);
-            if (isMatch == true) {
-                return true;
-            }
-            else {
-                return {msg: 'incorrect password'};
-            };
-        };
+                    return {msg: 'account not found'};
+                } else {
+                    const isMatch = await bcryptjs.compare(data.password, res.dataValues.password);
+                    if (isMatch == true) {
+                        if (res.dataValues.acctStatus == 'approved') {
+                            return true;
+                        } else {
+                            return {msg: 'unverified account'};
+                        }
+                    }
+                    else {
+                        return {msg: 'incorrect password'};
+                    };
+                };
     } catch (err) {
         return {msg: err};
     }

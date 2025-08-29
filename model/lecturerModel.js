@@ -8,6 +8,7 @@ const lecturer = sequelize.define('lecturers', {
   },
   email: {
     type: DataTypes.STRING,
+    unique: true,
     allowNull: false
   },
   password: {
@@ -21,13 +22,9 @@ const lecturer = sequelize.define('lecturers', {
   },
   assignedCourses: {
     type: DataTypes.JSON,
-    allowNull: false
+    allowNull: true
   },
   staffID: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  program: {
     type: DataTypes.STRING,
     allowNull: false
   },
@@ -41,7 +38,7 @@ const lecturer = sequelize.define('lecturers', {
   },
   hodApproval: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   role: {
     type: DataTypes.STRING,

@@ -17,18 +17,18 @@ router.post('/new', async(req, res)=>{
             username: req.body.username,
             email: req.body.email,
             level: req.body.level,
-            faculty: req.body.faculty,
             password: hashedPassword,
             department: req.body.department,
-            program: req.body.program,
             matricNumber: req.body.matricNumber
         });
         if (createdStudent == true) {
             const otpCode = await generateOtp(req.body.email);
+            console.log(otpCode);
             setTimeout(async()=>{const deleted = await deleteOTP({otp_code: otpCode})}, 300000);
-            const sentMail = sendVerificationMail(req.body.email, otpCode);
+            const sentMail = await sendVerificationMail(req.body.email, otpCode);
+            console.log(sentMail);
             if (sentMail == true) {
-                res.json({msg: 'success', info: 'OTP sent to mail'}).sendStatus(201);
+                res.json({msg: 'success', info: 'OTP sent to mail'});
             } else {
                 res.json({msg: 'failed', err: sentMail.error});
             }
@@ -81,7 +81,7 @@ router.post('/login', async (req, res)=>{
         const foundStudent = await findStudent({
             email: req.body.email,
             password: req.body.password
-        })
+        });
         if (foundStudent == true) {
             const payload = await getStudentPayload({email: req.body.email});
             if (payload.error) {
@@ -102,7 +102,7 @@ router.post('/login', async (req, res)=>{
             res.json({msg: 'login attempt failed', err: foundStudent.msg}).sendStatus(500);
         }
     } catch (error) {
-        res.json({msg: 'login attempt failed', err: error})
+        res.json({msg: 'login attempt failed', err: error.msg})
     }
 })
 
@@ -135,9 +135,22 @@ router.put('/register-course', [authenticateToken, authorizeStudent], async(req,
         const registered = await registerCourse({
             email: req.user.email,
             registeredCourses: req.body.registeredCourses
-        })  
+        });
+        if (registered == true) {
+            res.json({
+                msg: 'course registered successfully'
+            });
+        } else {
+            res.json({
+                msg: 'failed',
+                error: registered
+            });
+        }
     } catch (err) {
-        
+        res.json({
+            msg: 'error',
+            error: err
+        });
     }
 })
 
@@ -174,6 +187,7 @@ router.delete('/delete', [authenticateToken, authorizeStudent], async (req, res)
         }
     } catch (error) {
         res.json({msg: 'error', err: error});
+        console.log(error);
     }
 })
 

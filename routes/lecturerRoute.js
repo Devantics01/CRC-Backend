@@ -25,9 +25,8 @@ router.post('/new', async(req, res)=>{
         });
         if (createdLecturer == true) {
             const otpCode = await generateOtp(req.body.email);
-            setTimeout(async()=>{const deleted = await deleteOTP({otp_code: otpCode})}, 60000);
-            console.log(otpCode);
-            const sentMail = sendVerificationMail(req.body.email, otpCode);
+            setTimeout(async()=>{const deleted = await deleteOTP({otp_code: otpCode})}, 100000);
+            const sentMail = await sendVerificationMail(req.body.email, otpCode);
             if (sentMail == true) {
                 res.json({msg: 'success'}).sendStatus(201);
             } else {
