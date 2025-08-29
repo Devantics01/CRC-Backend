@@ -21,7 +21,6 @@ router.post('/new', async(req, res)=>{
             password: hashedPassword,
             department: req.body.department,
             levelsTaught: req.body.levelsTaught,
-            assignedCourses: req.body.assignedCourses,
             staffID: req.body.staffID
         });
         if (createdLecturer == true) {
