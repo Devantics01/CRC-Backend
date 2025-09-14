@@ -22,7 +22,7 @@ const hod = sequelize.define('hods', {
   },
   coursesManaged: {
     type: DataTypes.JSON,
-    allowNull: false
+    allowNull: true
   },
   faculty: {
     type: DataTypes.STRING,
@@ -30,7 +30,7 @@ const hod = sequelize.define('hods', {
   },
   academicYear: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   acctStatus: {
     type: DataTypes.STRING,
