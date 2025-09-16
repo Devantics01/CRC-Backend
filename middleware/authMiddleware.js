@@ -6,10 +6,13 @@ export const authenticateToken = (req, res, next)=>{
   if(token == null) return sendStatus(401);
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
-    if(err) return res.sendStatus(401);
-    req.user = user;
-    next();
-  })
+      if(err) {
+      res.json({msg: 'unathorized'});
+    } else {
+      req.user = user;
+      next();
+    }
+  });
 }
 
 export const authorizeStudent = (req, res, next)=>{
@@ -26,6 +29,16 @@ export const authorizeLecturer = (req, res, next)=>{
   } else{
     res.json({msg: 'access denied'});
   };
+};
+
+export const checkHODApproval = (req, res, next)=>{
+  if (req.user.hodApproval == 'approved') {
+    next();
+  } else {
+    res.json({
+      msg: 'cannot upload, your HOD has not approved your account!!!'
+    })
+  }
 };
 
 export const authorizeHOD = (req, res, next)=>{

@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import hod from "../model/hodModel.js";
 import bcryptjs from "bcryptjs";
 
@@ -9,7 +10,6 @@ export const createHOD = async(data)=>{
             password: data.password,
             department: data.department,
             faculty: data.faculty,
-            coursesManaged: data.coursesManaged,
             academicYear: data.academicYear,
             acctStatus: 'pending',
             role: 'hod',
@@ -92,6 +92,47 @@ export const getHODInfo = async(data)=>{
     };
 };
 
+const getNotifications = async(data)=>{
+    try {
+        const res = await hod.findOne({
+            where: {
+                department: data.department
+            }
+        })
+        if (!res) {
+            return false;
+        } else {
+            return {
+                status: true,
+                notifications: JSON.parse(res.dataValues.notifications)
+            };
+        };
+    } catch (err) {
+        return err;
+    }
+}
+
+export const updateHODNotifications = async(data)=>{
+    try {
+        const existingNotifications = await getNotifications({department: data.department});
+        if (existingNotifications.status == true) {
+            let notificationList = existingNotifications.notifications.notList;
+            notificationList.push(data.newNotifications);
+            await hod.update({
+                notifications: notificationList
+            }, {
+                where: {
+                    department: data.department
+                }
+            })
+        } else if(existingNotifications = false) {
+            return false
+        };
+    } catch (err) {
+        return err;
+    }
+}
+
 export const updateHODAcctStatus = async(data)=>{
     try {
         const res = await hod.update({
@@ -112,9 +153,7 @@ export const updateHODAcctStatus = async(data)=>{
 export const updateHODInfo = async(data)=>{
     try {
         await hod.update({
-            academicYear: data.academicYear,
-            department: data.department,
-            faculty: data.faculty
+            academicYear: data.academicYear
         }, {
             where: {
                 email: data.email,

@@ -1,11 +1,12 @@
 import express from 'express';
-import { authenticateToken, authorizeHOD, authorizeLecturer, authorizeUser } from '../middleware/authMiddleware.js';
+import { authenticateToken, authorizeHOD, authorizeLecturer, checkHODApproval, authorizeUser } from '../middleware/authMiddleware.js';
 import { uploadDoc } from '../helper/upload.js';
+import path from 'path';
 import { createCourse, getCourse, getCourseInBulk, updateCourseMaterial, updateCourseAssignment, updateCourseInfo, updateCourseResources, approveCourseMaterial, deleteCourse } from '../controller/courseController.js';
 
 const router = express.Router();
 
-router.post('new', [authenticateToken, authorizeHOD], async(req,res)=>{
+router.post('/new', [authenticateToken, authorizeHOD], async(req,res)=>{
     try {
         const courseCreated = await createCourse(
             {
@@ -13,10 +14,10 @@ router.post('new', [authenticateToken, authorizeHOD], async(req,res)=>{
                 course_code: req.body.course_code,
                 department: req.user.department,
                 level: req.body.level,
-                faculty: req.body.faculty,
                 course_description: req.body.course_description,
             }
         );
+        console.log(courseCreated);
         if (courseCreated == true) {
             res.json({msg: "course created successfully"});
         } else {
@@ -33,13 +34,16 @@ router.post('new', [authenticateToken, authorizeHOD], async(req,res)=>{
     }
 });
 
-router.put('/upload', [authenticateToken, authorizeLecturer, uploadDoc], async(req, res)=>{
-    if (req.user.hodApproval == 'approved') {
-        try {
+router.put('/upload', [authenticateToken, authorizeLecturer, checkHODApproval, uploadDoc], async(req, res)=>{
+    try {
+        const fileLinks = req.files.map(file => {
+        const relativePath = `/uploads/${file.filename}`;
+        return relativePath;
+        });
         const courseUploaded = await updateCourseMaterial({
             course_code: req.body.course_code,
             course_name: req.body.course_name,
-            resource_link: `/uploads/course/${req.file.filename}`,
+            resource_link: fileLinks,
             assignment: req.body.assignment
         });
         if (courseUploaded == true) {
@@ -51,15 +55,11 @@ router.put('/upload', [authenticateToken, authorizeLecturer, uploadDoc], async(r
             });
         }
     } catch (err) {
+        console.log(err);
         res.json({
             msg: "error",
             error: err
         })
-    }
-    } else {
-        res.json({
-            msg: 'Cannot upload!!!, You have not been authorized by your HOD'
-        });   
     }
 });
 
@@ -93,6 +93,7 @@ router.put('/update-file-resource', [authenticateToken, authorizeLecturer, uploa
     try {
         const updated = await updateCourseResources({
             course_code: req.body.course_code,
+            assignment: req.body.assignment,
             resource_link: `/uploads/course/${req.file.filename}`
         });
         if (updated == true) {

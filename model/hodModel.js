@@ -1,3 +1,4 @@
+import { type } from "os";
 import sequelize from "../config/dbconnect.js";
 import { DataTypes } from 'sequelize';
 
@@ -18,11 +19,12 @@ const hod = sequelize.define('hods', {
   },
   department: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   coursesManaged: {
     type: DataTypes.JSON,
-    allowNull: false
+    allowNull: true
   },
   faculty: {
     type: DataTypes.STRING,
@@ -30,7 +32,7 @@ const hod = sequelize.define('hods', {
   },
   academicYear: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   acctStatus: {
     type: DataTypes.STRING,
@@ -39,6 +41,10 @@ const hod = sequelize.define('hods', {
   role: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  notifications: {
+    type: DataTypes.JSON,
+    allowNull: true
   }
 });
 

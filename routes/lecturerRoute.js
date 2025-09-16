@@ -1,11 +1,12 @@
 import express from 'express';
 import bcryptjs from 'bcryptjs';
 import { generateToken } from '../config/token.js';
-import {createLecturer, findLecturer, getLecturerPayload, getLecturerInfo, updateLecturerInfo, updateLecturerAcctStatus, deleteLecturer } from '../controller/lecturerController.js';
-import { sendVerificationMail } from '../helper/emailHelper.js';
+import {createLecturer, findLecturer, getLecturerPayload, getLecturerInfo, updateLecturerInfo, updateHODApproval, updateLecturerAcctStatus, deleteLecturer } from '../controller/lecturerController.js';
+import { sendNewLecturerMail, sendVerificationMail } from '../helper/emailHelper.js';
 import { generateOtp } from '../helper/otpGenerator.js';
-import { authenticateToken, authorizeLecturer } from '../middleware/authMiddleware.js';
+import { authenticateToken, authorizeHOD, authorizeLecturer } from '../middleware/authMiddleware.js';
 import { confirmOTP, deleteOTP } from '../controller/otpController.js';
+import { info } from 'console';
 
 const router = express.Router();
 
@@ -15,9 +16,7 @@ router.post('/new', async(req, res)=>{
         const hashedPassword = await bcryptjs.hash(req.body.password, salt);
         const createdLecturer = await createLecturer({
             username: req.body.username,
-	        program: req.body.program,
             email: req.body.email,
-            faculty: req.body.faculty,
             password: hashedPassword,
             department: req.body.department,
             levelsTaught: req.body.levelsTaught,
@@ -25,10 +24,11 @@ router.post('/new', async(req, res)=>{
         });
         if (createdLecturer == true) {
             const otpCode = await generateOtp(req.body.email);
+            console.log(otpCode)
             setTimeout(async()=>{const deleted = await deleteOTP({otp_code: otpCode})}, 100000);
             const sentMail = await sendVerificationMail(req.body.email, otpCode);
             if (sentMail == true) {
-                res.json({msg: 'success'}).sendStatus(201);
+                res.json({msg: 'success', info: 'OTP sent to Mail'});
             } else {
                 res.json({msg: 'failed', err: sentMail.error});
             }
@@ -65,7 +65,7 @@ router.post('/verify', async(req, res)=>{
                 msg: 'failed to verify',
                 err: 'invalid OTP'
             });
-        }
+            }
     } catch (error) {
         res.json({
             msg: 'failed to verify',
@@ -129,10 +129,7 @@ router.put('/update', [authenticateToken, authorizeLecturer], async (req, res)=>
     try {
         const updated = await updateLecturerInfo({
             email: req.user.email,
-            department: req.body.department,
-            faculty: req.body.faculty,
             levelsTaught: req.body.levelsTaught,
-            assignedCourses: req.body.assignedCourses
         })
         if (updated == true) {
             res.json({msg: 'profile updated successfully'});
@@ -143,6 +140,30 @@ router.put('/update', [authenticateToken, authorizeLecturer], async (req, res)=>
         res.json({msg: 'error', err: error});
     }
 })
+
+router.put('/approve', [authenticateToken, authorizeHOD], async(req, res)=>{
+    try {
+        const approved = await updateHODApproval({
+            email: req.body.email
+        });
+        if (approved == true) {
+            res.json({
+                msg: 'success'
+        });
+        } else {
+            res.json({
+                msg: 'failed',
+                error: approved
+            });
+        }
+    } catch (err) {
+        res.json({
+            msg: 'error',
+            error: err
+        });
+    }
+})
+
 
 router.delete('/delete', [authenticateToken, authorizeLecturer], async (req, res)=>{
     try {

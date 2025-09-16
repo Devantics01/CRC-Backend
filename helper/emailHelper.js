@@ -70,13 +70,13 @@ export const sendApprovedMail = async(email, course_name, course_code)=>{
   };
 };
 
-export const sendNewLecturerMail = async(email, lecturer_name)=>{
+export const sendNewLecturerMail = async(email, lecturer_name, staffID)=>{
   try{
     await transporter.sendMail({
       from: 'CourseWare Cloud',
       to: email,
       subject: 'NEW LECTURER IN YOUR DEPARTMENT',
-      html: `<p><b>Hello there,<br> A new Lecturer has been registered under your department!!! <br> Lecturer Name: ${lecturer_name}<br><p>Login to approve</p>`
+      html: `<p><b>Hello there,<br> A new Lecturer has been registered under your department!!! <br> Lecturer Name: ${lecturer_name}<br> staffID: ${staffID}<br><p>Login to approve</p>`
     })
     return true;
   } catch(err){

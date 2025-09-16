@@ -62,7 +62,6 @@ export const getLecturerPayload = async(data)=>{
         } else {
             return {
                 username: res.dataValues.username,
-                hodApproval: res.dataValues.hodApproval,
                 email: res.dataValues.email,
                 department: res.dataValues.department,
                 acctStatus: res.dataValues.acctStatus,
@@ -115,9 +114,11 @@ export const getLecturersByDepartment = async(data)=>{
             let i = 0;
             while(i < res.length){
                 lecturerList.push(JSON.stringify({
+                    email: res[i].dataValues.email,
                     username: res[i].dataValues.username,
                     staffID: res[i].dataValues.staffID,
-                    levelsTaught: res[i].dataValues.levelsTaught
+                    levelsTaught: res[i].dataValues.levelsTaught,
+                    hodApproval: res[i].dataValues.hodApproval
                 }));
             }
             return {status: true, list: lecturerList};
@@ -161,11 +162,7 @@ export const updateHODApproval = async(data)=>{
 export const updateLecturerInfo = async(data)=>{
     try {
         await lecturer.update({
-            program: data.program,
-            department: data.department,
-            assignedCourses: data.assignedCourses,
-            faculty: data.faculty,
-            staffID: data.staffID
+            levelsTaught: data.levelsTaught
         }, {
             where: {
                 email: data.email,

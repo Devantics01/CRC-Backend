@@ -20,21 +20,17 @@ const course = sequelize.define('courses', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    faculty: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
     course_description: {
         type: DataTypes.STRING,
         allowNull: false
     },
     resource_link: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.JSON,
+        allowNull: true
     },
     assignments: {
         type: DataTypes.JSON,
-        allowNull: false
+        allowNull: true
     },
     resourceApproval: {
         type: DataTypes.STRING,

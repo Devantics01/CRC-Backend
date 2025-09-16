@@ -7,6 +7,11 @@ import otpRoute from './routes/otpRoute.js';
 import hodRoutes from './routes/hodRoutes.js';
 import courseRoutes from './routes/courseRoute.js';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 const port = process.env.PORT || 3004;
@@ -14,6 +19,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res)=>{
     res.send('welcome to CRC Backend :)');

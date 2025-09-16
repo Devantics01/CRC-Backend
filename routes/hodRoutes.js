@@ -26,6 +26,7 @@ router.post('/new', async(req, res)=>{
         });
         if (createdHOD == true) {
             const otpCode = await generateOtp(req.body.email);
+            console.log(otpCode);
             setTimeout(async()=>{const deleted = await deleteOTP({otp_code: otpCode})}, 300000);
             const sentMail = await sendVerificationMail(req.body.email, otpCode);
             if (sentMail == true) {
@@ -47,12 +48,10 @@ router.post('/verify', async(req, res)=>{
         if (confirmedOtp.status == true) {
             await updateHODAcctStatus({email: confirmedOtp.email, acctStatus: 'approved'});
             const payload = await getHODPayload({email: confirmedOtp.email});
-            console.log(payload);
             if (payload.error) {
                 res.json({msg: 'cannot get token payload', err: payload.error}).sendStatus(500);
             } else {
                 const token = await generateToken(payload);
-                console.log(token);
                 if (token.error) {
                     res.json({msg: 'unable to generate token', err: token.err});
                 } else {
@@ -184,9 +183,7 @@ router.put('/update', [authenticateToken, authorizeHOD], async (req, res)=>{
     try {
         const updated = await updateHODInfo({
             email: req.user.email,
-            academicYear: req.body.academicYear,
-            department: req.body.department,
-            faculty: req.body.faculty
+            academicYear: req.body.academicYear
         })
         if (updated == true) {
             res.json({msg: 'profile updated successfully'});

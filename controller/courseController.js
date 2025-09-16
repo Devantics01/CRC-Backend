@@ -8,8 +8,6 @@ export const createCourse = async(data)=>{
             course_code: data.course_code,
             department: data.department,
             level: data.level,
-            assignment: '',
-            faculty: data.faculty,
             course_description: data.course_description,
             resourceApproval: 'pending'
         });
