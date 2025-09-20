@@ -93,7 +93,6 @@ router.put('/update-file-resource', [authenticateToken, authorizeLecturer, uploa
     try {
         const updated = await updateCourseResources({
             course_code: req.body.course_code,
-            assignment: req.body.assignment,
             resource_link: `/uploads/course/${req.file.filename}`
         });
         if (updated == true) {
@@ -148,11 +147,11 @@ router.put('/update-course-info', [authenticateToken, authorizeHOD], async(req, 
         });
         if (updated == true) {
             res.json({
-                msg: 'file updated successfully'
+                msg: 'course updated successfully'
             });
         } else {
             res.json({
-                msg: 'file update failed',
+                msg: 'course update failed',
                 error: updated.error
             });
         }
