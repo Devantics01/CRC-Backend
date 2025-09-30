@@ -33,7 +33,7 @@ app.use('/hod', hodRoutes);
 app.use('/course', courseRoutes);
 
 app.use(cors({
-    origin: ["http://localhost:5173", "https://crc-backend-vm4p.onrender.com"],
+    origin: ["http://localhost:5173", "http://localhost:5174", "http://localhost:3001", "https://crc-backend-vm4p.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
