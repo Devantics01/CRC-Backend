@@ -1,6 +1,7 @@
 import express from 'express';
 import bcryptjs from 'bcryptjs';
 import { generateToken } from '../config/token.js';
+import { confirmToken } from '../controller/tokenController.js';
 import {createLecturer, findLecturer, getLecturerPayload, getLecturerInfo, updateLecturerInfo, updateHODApproval, updateLecturerAcctStatus, deleteLecturer } from '../controller/lecturerController.js';
 import { sendNewLecturerMail, sendVerificationMail } from '../helper/emailHelper.js';
 import { generateOtp } from '../helper/otpGenerator.js';
@@ -178,6 +179,31 @@ router.delete('/delete', [authenticateToken, authorizeLecturer], async (req, res
     } catch (error) {
         res.json({msg: 'error', err: error});
     }
-})
+});
+
+router.post('/renew-token', async(req, res)=>{
+    try {
+        const confirmedToken = await confirmToken({refreshToken: req.body.refreshToken});
+        if (confirmedToken == true) {
+            jwt.verify(req.body.refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user)=>{
+            if(err) return res.sendStatus(401);
+            req.user = {
+                username: user.username,
+                email: user.email,
+                department: user.department,
+                acctStatus: user.acctStatus,
+                hoApproval: user.hoApproval,
+                role: user.role
+            };
+            const newToken = jwt.sign(req.user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: 600});
+            res.json({msg:'success', token: newToken});
+            });
+        } else {
+            res.json({msg:'unregistered token', err: confirmedToken})
+        }
+    } catch (err) {
+        res.json({msg:'unable to renew token', error: err});
+    }
+});
 
 export default router;

@@ -62,6 +62,7 @@ export const getHODPayload = async(data)=>{
                 username: res.dataValues.username,
                 email: res.dataValues.email,
                 department: res.dataValues.department,
+                acctStatus: res.dataValues.acctStatus,
                 role: res.dataValues.role
             };
         }

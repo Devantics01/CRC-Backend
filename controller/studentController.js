@@ -12,6 +12,9 @@ export const createStudent = async(data)=>{
             password: data.password,
             department: data.department,
             faculty: data.faculty,
+            calenderEvents: {
+                events:[]
+            },
             matricNumber: data.matricNumber,
             acctStatus: 'pending',
             role: 'student'
@@ -80,6 +83,7 @@ export const getStudentPayload = async(data)=>{
                 username: res.dataValues.username,
                 email: res.dataValues.email,
                 department: res.dataValues.department,
+                acctStatus: res.dataValues.acctStatus,
                 role: res.dataValues.role
             };
         }
@@ -160,6 +164,90 @@ export const updateStudentInfo = async(data)=>{
         return err;
     };
 };
+
+const getEventList = async (email) => {
+    try {
+        const res = await student.findOne({
+            where: {
+                email: email
+            }
+        })
+        if (res.dataValues.email === email) {
+            return res.dataValues.calenderEvents;
+        } else {
+            return false
+        }
+    } catch (err) {
+        console.log(err);
+        return 'error';
+    }
+}
+
+export const getCalender = async (data) => {
+    try {
+        const res = await student.findOne({
+            where: {
+                email: data.email
+            }
+        });
+        if (res == null) {
+            return false;
+        } else {
+            return res.dataValues.calenderEvents
+        }
+    } catch (err) {
+        console.log(err);
+        return 'error';
+    }
+}
+
+export const addEventToCalender = async (data) => {
+    try {
+        const currentEvents = await getEventList(data.email);
+        if (currentEvents == false) {
+            return false;
+        } else if (currentEvents == 'error') {
+            return 'error'
+        } else {
+            const currentEventsList = currentEvents.events;
+            currentEventsList.push(data.event);
+            currentEvents.events = currentEventsList;
+            await student.update({
+            calenderEvents: currentEvents
+            }, {
+                where: {
+                    email: data.email
+                }
+            });
+            return true;
+        };
+    } catch (err) {
+        console.log(err);
+        return 'error';
+    }
+}
+
+export const deleteEventFromCalender = async (data) => {
+    try {
+        const currentEvents = await getEventList(data.email);
+        let currentEventsList = currentEvents.events;
+        const targetEvent = data.eventID
+        const index = currentEventsList.findIndex(event => event.eventID === targetEvent);
+        currentEventsList.splice(index, 1);
+        currentEvents.events = currentEventsList;
+        await student.update({
+            calenderEvents: currentEvents
+        }, {
+            where: {
+                email: data.email
+            }
+        });
+        return true;
+    } catch (error) {
+        console/log(err);
+        return 'error';
+    }
+}
 
 export const deleteStudent = async(data)=>{
     try {

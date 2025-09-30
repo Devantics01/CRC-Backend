@@ -3,11 +3,13 @@ import jwt from 'jsonwebtoken';
 export const authenticateToken = (req, res, next)=>{
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-  if(token == null) return sendStatus(401);
+  if(token == null){
+    res.send('unauthorized').sendStatus(401);
+  }
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
       if(err) {
-      res.json({msg: 'unathorized'});
+      res.sendStatus(401);
     } else {
       req.user = user;
       next();
@@ -16,11 +18,21 @@ export const authenticateToken = (req, res, next)=>{
 }
 
 export const authorizeStudent = (req, res, next)=>{
-  if(req.user.role == 'student'){
+  if(req.user.role === 'student'){
     next();
   } else{
     res.json({msg: 'access denied'});
   };
+};
+
+export const authorizeAccStatus = (req, res, next)=>{
+  if (req.user.role === 'approval') {
+    next();
+  } else {
+    res.json({
+      msg: 'your account is not verified'
+    });
+  }
 };
 
 export const authorizeLecturer = (req, res, next)=>{

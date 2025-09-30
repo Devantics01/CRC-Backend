@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 export const generateToken = async (payload)=>{
     try {
-        const access_token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: 600});
+        const access_token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10mins'});
         const refresh_token = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET);
         const registeredToken = await registerToken({
             token_data: refresh_token

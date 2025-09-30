@@ -20,6 +20,10 @@ const student = sequelize.define('students', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  calenderEvents: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
   level: {
     type: DataTypes.STRING,
     allowNull: false

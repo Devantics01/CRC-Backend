@@ -1,11 +1,18 @@
 import express from 'express';
 import bcryptjs from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { confirmToken } from '../controller/tokenController.js';
 import { generateToken } from '../config/token.js';
-import {createStudent, findStudent, registerCourse, getStudentPayload, getStudentInfo, updateStudentInfo, updateStudentAcctStatus, deleteStudent } from '../controller/studentController.js';
+import {
+        createStudent, findStudent, registerCourse,
+        getStudentPayload, getStudentInfo, updateStudentInfo,
+        updateStudentAcctStatus, deleteStudent, getCalender,
+        addEventToCalender, deleteEventFromCalender
+    } from '../controller/studentController.js';
 import { sendVerificationMail } from '../helper/emailHelper.js';
-import { generateOtp } from '../helper/otpGenerator.js';
+import { generateOtp, generateEventID } from '../helper/otpGenerator.js';
 import { confirmOTP, deleteOTP } from '../controller/otpController.js';
-import { authenticateToken, authorizeStudent } from '../middleware/authMiddleware.js';
+import { authenticateToken, authorizeStudent, authorizeAccStatus } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -106,7 +113,7 @@ router.post('/login', async (req, res)=>{
     }
 })
 
-router.get('/profile', [authenticateToken, authorizeStudent], async (req, res)=>{
+router.get('/profile', [authenticateToken, authorizeAccStatus, authorizeStudent], async (req, res)=>{
     try {
         const studentProfile = await getStudentInfo({
             email: req.user.email
@@ -130,7 +137,7 @@ router.get('/profile', [authenticateToken, authorizeStudent], async (req, res)=>
     }
 });
 
-router.put('/register-course', [authenticateToken, authorizeStudent], async(req, res)=>{
+router.put('/register-course', [authenticateToken, authorizeAccStatus, authorizeStudent], async(req, res)=>{
     try {
         const registered = await registerCourse({
             email: req.user.email,
@@ -154,7 +161,7 @@ router.put('/register-course', [authenticateToken, authorizeStudent], async(req,
     }
 })
 
-router.put('/update', [authenticateToken, authorizeStudent], async (req, res)=>{
+router.put('/update', [authenticateToken, authorizeAccStatus, authorizeStudent], async (req, res)=>{
     try {
         const updated = await updateStudentInfo({
             email: req.user.email,
@@ -189,6 +196,114 @@ router.delete('/delete', [authenticateToken, authorizeStudent], async (req, res)
         res.json({msg: 'error', err: error});
         console.log(error);
     }
+});
+
+router.get('/get-events', [authenticateToken, authorizeAccStatus, authorizeStudent], async(req, res)=>{
+    try {
+        const events = await getCalender({
+            email: req.user.email
+        });
+        if (events == false) {
+            res.json({
+                msg: 'user not found'
+            });
+        } else if (events === 'error') {
+            res.json({
+                msg: 'an error occured'
+            })
+        } else {
+            res.json({
+                msg: 'success',
+                events: events
+            })
+        }
+    } catch (err) {
+        res.json({msg: 'error'}).sendStatus(500);
+        console.log(err);
+    }
 })
+
+router.put('/update-calender', [authenticateToken, authorizeAccStatus, authorizeStudent], async  (req, res)=>{
+    try {
+        const updated = await addEventToCalender({
+            email: req.user.email,
+            event: {
+                eventID: generateEventID(),
+                eventName: req.body.eventName,
+                eventDescription: req.body.eventDescription,
+                eventTime: req.body.eventTime,
+                eventDate: req.body.eventDate
+            }
+        });
+        if (updated == true) {
+            res.json({
+                msg: 'suucess'
+            });
+        } else if (updated === 'error') {
+            res.json({
+                msg: 'error'
+            });
+        } else if (updated == false) {
+            res.json({
+                msg: 'user not found'
+            })   
+        }
+    } catch (err) {
+        res.json({
+            msg: 'error'
+        });
+        console.log(err);
+    }
+})
+
+router.delete('/delete-event', [authenticateToken, authorizeAccStatus, authorizeStudent], async(req, res)=>{
+    try {
+        const deleted = await deleteEventFromCalender({
+            email: req.user.email,
+            eventID: req.body.eventID
+        });
+        if (deleted == true) {
+            res.json({
+                msg: 'success'
+            })
+        } else {
+            res.json({
+                mag: 'failed'
+            });
+        }
+    } catch (err) {
+        res.json({
+            msg: 'error'
+        });
+        console.log(Err);
+    }
+});
+
+
+router.post('/renew-token', async(req, res)=>{
+    try {
+        const confirmedToken = await confirmToken({refreshToken: req.body.refreshToken});
+        if (confirmedToken == true) {
+            jwt.verify(req.body.refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user)=>{
+            if(err) return res.sendStatus(401);
+            req.user = {
+                username: user.username,
+                email: user.email,
+                department: user.department,
+                acctStatus: user.acctStatus,
+                role: user.role
+            };
+            const newToken = jwt.sign(req.user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: 600});
+            res.json({msg:'success', token: newToken});
+            });
+        } else {
+            console.log(confirmedToken);
+            res.json({msg:'unregistered token', err: confirmedToken})
+        }
+    } catch (err) {
+        console.log(err);
+        res.json({msg:'unable to renew token', error: err});
+    }
+});
 
 export default router;
