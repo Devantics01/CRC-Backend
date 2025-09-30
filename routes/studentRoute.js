@@ -92,7 +92,7 @@ router.post('/login', async (req, res)=>{
         if (foundStudent == true) {
             const payload = await getStudentPayload({email: req.body.email});
             if (payload.error) {
-                res.json({msg: 'cannot get token payload', err: payload.error}).sendStatus(500);
+                res.json({msg: 'cannot get token payload', err: payload.error});
             } else {
                 const token = await generateToken(payload);
                 if (token.error) {
@@ -106,7 +106,7 @@ router.post('/login', async (req, res)=>{
                 };
             };
         } else {
-            res.json({msg: 'login attempt failed', err: foundStudent.msg}).sendStatus(500);
+            res.json({msg: 'login attempt failed', err: foundStudent.msg});
         }
     } catch (error) {
         res.json({msg: 'login attempt failed', err: error.msg})
