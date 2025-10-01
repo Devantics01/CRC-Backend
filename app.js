@@ -41,5 +41,3 @@ app.use(cors({
 app.listen(port, ()=>{
     console.log(`server running at on port ${port}`);
 });
-
-export default app;
