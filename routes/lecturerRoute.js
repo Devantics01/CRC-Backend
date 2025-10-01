@@ -3,7 +3,7 @@ import bcryptjs from 'bcryptjs';
 import { generateToken } from '../config/token.js';
 import { confirmToken } from '../controller/tokenController.js';
 import {createLecturer, findLecturer, getLecturerPayload, getLecturerInfo, updateLecturerInfo, updateHODApproval, updateLecturerAcctStatus, deleteLecturer } from '../controller/lecturerController.js';
-import { sendNewLecturerMail, sendVerificationMail } from '../helper/emailHelper.js';
+import { sendVerificationMail } from '../helper/emailHelper.js';
 import { generateOtp } from '../helper/otpGenerator.js';
 import { authenticateToken, authorizeHOD, authorizeLecturer } from '../middleware/authMiddleware.js';
 import { confirmOTP, deleteOTP } from '../controller/otpController.js';
