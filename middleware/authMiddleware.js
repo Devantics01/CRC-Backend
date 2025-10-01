@@ -26,7 +26,7 @@ export const authorizeStudent = (req, res, next)=>{
 };
 
 export const authorizeAccStatus = (req, res, next)=>{
-  if (req.user.role === 'approved') {
+  if (req.user.acctStatus === 'approved') {
     next();
   } else {
     res.json({
