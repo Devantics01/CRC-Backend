@@ -107,7 +107,8 @@ export const getStudentInfo = async(data)=>{
                 level: res.dataValues.level,
                 matricNumber: res.dataValues.matricNumber,
                 department: res.dataValues.department,
-                registerCourses: res.dataValues.registeredCourses
+                registerCourses: res.dataValues.registeredCourses,
+                calenderEvents: res.dataValues.calenderEvents
             };
         };
     } catch (err) {
