@@ -16,6 +16,7 @@ export const createStudent = async(data)=>{
                 events:[]
             },
             matricNumber: data.matricNumber,
+            bookmark: {marks:[]},
             acctStatus: 'pending',
             role: 'student'
         })
@@ -175,6 +176,58 @@ export const deleteStudent = async(data)=>{
             }
         })
         return true;
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
+};
+
+export const getBookmark = async (email) => {
+    try {
+        const response = await student.findOne({
+            where: {
+                email: email
+            },
+            attributes: ['bookmark']
+        });
+        console.log(response);
+        return response.dataValues.bookmark;
+    } catch (err) {
+        console.log(err)
+        return 'error';
+    }
+}
+
+export const addCourseToBookmark = async (data) => {
+    try {
+        const markList = await getBookmark(data.email);
+        markList.marks.push(data.course);
+        await student.update({
+            bookmark: markList
+        }, {
+            where: {
+                email: data.email
+            }
+        });
+        return true;
+    } catch (err) {
+        console.log(err);
+        return 'error';
+    }
+};
+
+
+export const deleteCourseFromBookmark = async (data) => {
+    try {
+        const markList = await getBookmark(data.email);
+        const index = markList.marks.findIndex(course => course.course_code == data.course_code);
+        markList.marks.splice(index, 1);
+        await student.update({
+            bookmark: markList
+        }, {where: {
+            email: data.email
+        }});
+        return true
     } catch (err) {
         console.log(err);
         return err;

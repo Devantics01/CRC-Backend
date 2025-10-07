@@ -39,28 +39,31 @@ router.get('/get', [authenticateToken, authorizeAccStatus, authorizeUser], async
     try {
         const publicEvents = await getPublicEvents(req.query.month);
         const privateEvents = await getPrivateEvents(req.query.month, req.user.email);
-        if (publicEvents.status == true) {
-            if (privateEvents.status == true) {
-                res.json({
-                    msg: 'success',
-                    privateEvents: privateEvents.info,
-                    publicEvents: publicEvents.info
-                })
-            } else {
-                res.json({
-                    msg: 'unable to get private events',
-                    publicEvents: publicEvents.info
-                });
-            }
+        if (publicEvents.status == true && privateEvents.status == true) {
+            res.json({
+                msg: 'success',
+                publicEvents: publicEvents.info,
+                privateEvents: privateEvents.info
+            });
+        } else if (publicEvents.status == true && privateEvents == false) {
+            res.json({
+                msg: 'no private events',
+                publicEvents: publicEvents.info
+            })
+        } else if (publicEvents == false && privateEvents.status == true) {
+            res.json({
+                msg: 'no public events',
+                privateEvents: privateEvents.info
+            })
         } else {
             res.json({
-                msg: 'failed',
-                error: err.message
+                msg: 'no events'
             })
         }
     } catch (err) {
         res.json({
-            msg: 'error'
+            msg: 'error',
+            error: err.message
         })
     };
 });
@@ -73,7 +76,8 @@ router.put('/update', [authenticateToken, authorizeAccStatus, authorizeUser], as
             eventDate: req.body.eventDate,
             eventLocation: req.body.eventLocation,
             eventName: req.body.eventName,
-            eventTime: req.body.eventTime
+            eventTime: req.body.eventTime,
+            email: req.user.email
         });
         if (updated == true) {
             res.json({
@@ -94,7 +98,7 @@ router.put('/update', [authenticateToken, authorizeAccStatus, authorizeUser], as
 
 router.delete('/delete', [authenticateToken, authorizeAccStatus, authorizeUser], async (req, res) => {
     try {
-        const deleted = await deleteEvent(req.body.eventID);
+        const deleted = await deleteEvent(req.body.eventID, req.user.email);
         if (deleted == true) {
             res.json({
                 msg: 'success'

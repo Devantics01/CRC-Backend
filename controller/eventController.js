@@ -87,16 +87,16 @@ export const getPublicEvents = async (month) => {
         } else {
             const eventList = [];
             let index = 0;
-            while (index < response.dataValues.length) {
+            while (index < response.length) {
                 const eventInstance = {
-                    eventName: response.dataValues[index].eventName,
-                    eventDescription: response.dataValues[index].eventDescription,
-                    eventDate: response.dataValues[index].eventDate,
-                    eventLocation: response.dataValues[index].eventLocation,
-                    eventTime: response.dataValues[index].eventTime,
-                    eventOwner: response.dataValues[index].eventOwner,
-                    eventID: response.dataValues[index].eventID,
-                    eventStatus: response.dataValues[index].eventStatus
+                    eventName: response[index].dataValues.eventName,
+                    eventDescription: response[index].dataValues.eventDescription,
+                    eventDate: response[index].dataValues.eventDate,
+                    eventLocation: response[index].dataValues.eventLocation,
+                    eventTime: response[index].dataValues.eventTime,
+                    eventOwner: response[index].dataValues.eventOwner,
+                    eventID: response[index].dataValues.eventID,
+                    eventStatus: response[index].dataValues.eventStatus
                 }
                 eventList.push(eventInstance);
                 index++;
@@ -119,21 +119,21 @@ export const getPrivateEvents = async (month, email) => {
                 eventOwner: email
             }
         });
-        if (response == null || response.dataValues.length == 0) {
+        if (response == null) {
             return false;
         } else {
             const eventList = [];
             let index = 0;
-            while (index < response.dataValues.length) {
+            while (index < response.length) {
                 const eventInstance = {
-                    eventName: response.dataValues[index].eventName,
-                    eventDescription: response.dataValues[index].eventDescription,
-                    eventDate: response.dataValues[index].eventDate,
-                    eventLocation: response.dataValues[index].eventLocation,
-                    eventTime: response.dataValues[index].eventTime,
-                    eventOwner: response.dataValues[index].eventOwner,
-                    eventID: response.dataValues[index].eventID,
-                    eventStatus: response.dataValues[index].eventStatus
+                    eventName: response[index].dataValues.eventName,
+                    eventDescription: response[index].dataValues.eventDescription,
+                    eventDate: response[index].dataValues.eventDate,
+                    eventLocation: response[index].dataValues.eventLocation,
+                    eventTime: response[index].dataValues.eventTime,
+                    eventOwner: response[index].dataValues.eventOwner,
+                    eventID: response[index].dataValues.eventID,
+                    eventStatus: response[index].dataValues.eventStatus
                 }
                 eventList.push(eventInstance);
                 index++;
@@ -158,7 +158,8 @@ export const updateEvent = async (data) => {
             eventTime: data.eventTime
         }, {
             where: {
-                eventID: data.eventID
+                eventID: data.eventID,
+                eventOwner: data.email
             }
         });
         return true;
@@ -168,11 +169,12 @@ export const updateEvent = async (data) => {
     }
 };
 
-export const deleteEvent = async (eventID) => {
+export const deleteEvent = async (eventID, email) => {
     try {
         await event.destroy({
             where: {
-                eventID: eventID
+                eventID: eventID,
+                eventOwner: email
             }
         });
         return true;

@@ -6,7 +6,8 @@ import { generateToken } from '../config/token.js';
 import {
         createStudent, findStudent, registerCourse,
         getStudentPayload, getStudentInfo, updateStudentInfo,
-        updateStudentAcctStatus, deleteStudent
+        updateStudentAcctStatus, deleteStudent, getBookmark,
+        addCourseToBookmark, deleteCourseFromBookmark
     } from '../controller/studentController.js';
 import { sendVerificationMail } from '../helper/emailHelper.js';
 import { generateOtp, generateEventID } from '../helper/otpGenerator.js';
@@ -223,5 +224,72 @@ router.post('/renew-token', async(req, res)=>{
         res.json({msg:'unable to renew token', error: err});
     }
 });
+
+router.put('/add-bookmark', [authenticateToken, authorizeAccStatus, authorizeStudent], async (req, res) => {
+    try {
+        const added = await addCourseToBookmark({
+            email: req.user.email,
+            course: {
+                course_name: req.body.course_name,
+                course_code: req.body.course_code,
+            }
+        });
+        if (added == true) {
+            res.json({
+                msg: 'success'
+            });
+        } else {
+            res.json({
+                msg: 'failed'
+            })
+        }
+    } catch (err) {
+        res.json({
+            msg: 'error',
+            error: err.message
+        })
+    }
+});
+
+
+router.get('/get-bookmark', [authenticateToken, authorizeAccStatus, authorizeStudent], async (req, res) => {
+    try {
+        const info = await getBookmark(req.user.email);
+        res.json({
+            msg: 'success',
+            bookmark: info
+        })
+    } catch (err) {
+        res.json({
+            msg: 'error',
+            error: err.message
+        })
+    }
+});
+
+
+router.put('/remove-bookmark', [authenticateToken, authorizeAccStatus, authorizeStudent], async (req, res) => {
+    try {
+        const deleted = await deleteCourseFromBookmark({
+            email: req.user.email,
+            course_code: req.body.course_code
+        })
+        if (deleted == true) {
+            res.json({
+                msg: 'success'
+            })
+        } else {
+            res.json({
+                msg: 'failed'
+            })
+        }
+    } catch (err) {
+        res.json({
+            msg: 'error',
+            error: err.message
+        });
+    }
+});
+
 
 export default router;
