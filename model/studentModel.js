@@ -20,7 +20,7 @@ const student = sequelize.define('students', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  calenderEvents: {
+  bookmark: {
     type: DataTypes.JSON,
     allowNull: true
   },

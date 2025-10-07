@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import studentRoute from './routes/studentRoute.js';
 import lecturerRoute from './routes/lecturerRoute.js';
 import tokenRoute from './routes/tokenRoute.js';
+import eventRoute from './routes/eventRoutes.js';
 import otpRoute from './routes/otpRoute.js';
 import hodRoutes from './routes/hodRoutes.js';
 import courseRoutes from './routes/courseRoute.js';
@@ -29,6 +30,7 @@ app.use('/student', studentRoute);
 app.use('/lecturer', lecturerRoute);
 app.use('/token', tokenRoute);
 app.use('/otp', otpRoute);
+app.use('/event', eventRoute);
 app.use('/hod', hodRoutes);
 app.use('/course', courseRoutes);
 

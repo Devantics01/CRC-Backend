@@ -6,8 +6,7 @@ import { generateToken } from '../config/token.js';
 import {
         createStudent, findStudent, registerCourse,
         getStudentPayload, getStudentInfo, updateStudentInfo,
-        updateStudentAcctStatus, deleteStudent, getCalender,
-        addEventToCalender, deleteEventFromCalender
+        updateStudentAcctStatus, deleteStudent
     } from '../controller/studentController.js';
 import { sendVerificationMail } from '../helper/emailHelper.js';
 import { generateOtp, generateEventID } from '../helper/otpGenerator.js';
@@ -195,87 +194,6 @@ router.delete('/delete', [authenticateToken, authorizeStudent], async (req, res)
     } catch (error) {
         res.json({msg: 'error', err: error});
         console.log(error);
-    }
-});
-
-router.get('/get-events', [authenticateToken, authorizeAccStatus, authorizeStudent], async(req, res)=>{
-    try {
-        const events = await getCalender({
-            email: req.user.email
-        });
-        if (events == false) {
-            res.json({
-                msg: 'user not found'
-            });
-        } else if (events === 'error') {
-            res.json({
-                msg: 'an error occured'
-            })
-        } else {
-            res.json({
-                msg: 'success',
-                events: events
-            })
-        }
-    } catch (err) {
-        res.json({msg: 'error'}).sendStatus(500);
-        console.log(err);
-    }
-})
-
-router.put('/update-calender', [authenticateToken, authorizeAccStatus, authorizeStudent], async  (req, res)=>{
-    try {
-        const updated = await addEventToCalender({
-            email: req.user.email,
-            event: {
-                eventID: generateEventID(),
-                eventName: req.body.eventName,
-                eventDescription: req.body.eventDescription,
-                eventTime: req.body.eventTime,
-                eventDate: req.body.eventDate
-            }
-        });
-        if (updated == true) {
-            res.json({
-                msg: 'suucess'
-            });
-        } else if (updated === 'error') {
-            res.json({
-                msg: 'error'
-            });
-        } else if (updated == false) {
-            res.json({
-                msg: 'user not found'
-            })   
-        }
-    } catch (err) {
-        res.json({
-            msg: 'error'
-        });
-        console.log(err);
-    }
-})
-
-router.delete('/delete-event', [authenticateToken, authorizeAccStatus, authorizeStudent], async(req, res)=>{
-    try {
-        const deleted = await deleteEventFromCalender({
-            email: req.user.email,
-            eventID: req.body.eventID
-        });
-        if (deleted == true) {
-            res.json({
-                msg: 'success'
-            })
-        } else {
-            res.json({
-                mag: 'failed'
-            });
-        }
-    } catch (err) {
-        res.json({
-            msg: 'error'
-        });
-        console.log(Err);
     }
 });
 

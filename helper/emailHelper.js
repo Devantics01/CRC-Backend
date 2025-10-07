@@ -42,4 +42,4 @@ export const sendVerificationMail = async(email, otp_code)=>{
   };
 };
 
-await sendVerificationMail('adetoyea28@gmail.com', 345890)
+
