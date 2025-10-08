@@ -16,6 +16,10 @@ const course = sequelize.define('courses', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    lecturer: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     level: {
         type: DataTypes.STRING,
         allowNull: false

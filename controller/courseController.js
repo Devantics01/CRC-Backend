@@ -1,4 +1,3 @@
-import { Op, where } from "sequelize";
 import course from "../model/courseModel.js ";
 
 export const createCourse = async(data)=>{
@@ -8,6 +7,7 @@ export const createCourse = async(data)=>{
             course_code: data.course_code,
             department: data.department,
             level: data.level,
+            lecturer: data.lecturer,
             course_description: data.course_description,
             resourceApproval: 'pending'
         });
@@ -29,6 +29,7 @@ export const getCourse = async(data)=>{
             course_name: res.dataValues.course_name,
             course_code: res.dataValues.course_code,
             course_description: res.dataValues.course_code,
+            lecturer: res.dataValues.lecturer,
             resource_link: res.dataValues.resource_link,
             resourceApproval: res.dataValues.resourceApproval,
             assignment: res.dataValues.assignment
@@ -37,14 +38,11 @@ export const getCourse = async(data)=>{
         return {error: err};
     };
 };
-
-export const getCourseInBulk = async(data)=>{
+export const getCourseByDepartment = async(department)=>{
     try {
         const res = await course.findAll({
             where: {
-                course_name: {
-                    [Op.in]: data
-                }
+                department: department
             }
         });
         let courseList = [];
@@ -56,16 +54,48 @@ export const getCourseInBulk = async(data)=>{
             }
             courseList.push({
                 course_name: res[index].dataValues.course_name,
+                lecturer: res[index].dataValues.lecturer,
+                course_code: res[index].dataValues.course_code,
                 course_description: res[index].dataValues.course_description,
                 assignment: assignmentStatus,
             });
             index++;
         };
-        return courseList;
+        return {status: true, info: courseList};
     } catch (err) {
         return {error: err};
     };
 };
+
+export const getCourseByLecturer = async(lecturer)=>{
+    try {
+        const res = await course.findAll({
+            where: {
+                lecturer: lecturer
+            }
+        });
+        let courseList = [];
+        let index = 0;
+        while(index < res.length){
+            let assignmentStatus = 'yes';
+            if (res[index].assignment == null) {
+                assignmentStatus = 'no';
+            }
+            courseList.push({
+                course_name: res[index].dataValues.course_name,
+                lecturer: res[index].dataValues.lecturer,
+                course_code: res[index].dataValues.course_code,
+                course_description: res[index].dataValues.course_description,
+                assignment: assignmentStatus,
+            });
+            index++;
+        };
+        return {status: true, info: courseList};
+    } catch (err) {
+        return {error: err};
+    };
+};
+
 
 export const updateCourseMaterial = async(data)=>{
     try {

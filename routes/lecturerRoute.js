@@ -21,7 +21,7 @@ router.post('/new', async(req, res)=>{
             password: hashedPassword,
             department: req.body.department,
             levelsTaught: req.body.levelsTaught,
-            staffID: req.body.staffID
+            faculty: req.body.faculty
         });
         if (createdLecturer == true) {
             const otpCode = await generateOtp(req.body.email);

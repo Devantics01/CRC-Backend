@@ -20,11 +20,7 @@ const lecturer = sequelize.define('lecturers', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  assignedCourses: {
-    type: DataTypes.JSON,
-    allowNull: true
-  },
-  staffID: {
+  department: {
     type: DataTypes.STRING,
     allowNull: false
   },

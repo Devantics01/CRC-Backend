@@ -1,17 +1,17 @@
 import express from 'express';
 import { authenticateToken, authorizeHOD, authorizeLecturer, checkHODApproval, authorizeUser } from '../middleware/authMiddleware.js';
 import { uploadDoc } from '../helper/upload.js';
-import path from 'path';
-import { createCourse, getCourse, getCourseInBulk, updateCourseMaterial, updateCourseAssignment, updateCourseInfo, updateCourseResources, approveCourseMaterial, deleteCourse } from '../controller/courseController.js';
+import { createCourse, getCourse, getCourseByDepartment, getCourseByLecturer, updateCourseMaterial, updateCourseAssignment, updateCourseInfo, updateCourseResources, approveCourseMaterial, deleteCourse } from '../controller/courseController.js';
 
 const router = express.Router();
 
-router.post('/new', [authenticateToken, authorizeHOD], async(req,res)=>{
+router.post('/new', [authenticateToken, authorizeHOD, authorizeLecturer, authorizeUser], async(req,res)=>{
     try {
         const courseCreated = await createCourse(
             {
                 course_name: req.body.course_name,
                 course_code: req.body.course_code,
+                lecturer: req.body.lecturerEmail,
                 department: req.user.department,
                 level: req.body.level,
                 course_description: req.body.course_description,
@@ -19,6 +19,7 @@ router.post('/new', [authenticateToken, authorizeHOD], async(req,res)=>{
         );
         console.log(courseCreated);
         if (courseCreated == true) {
+
             res.json({msg: "course created successfully"});
         } else {
             res.json({
@@ -88,6 +89,48 @@ router.get('/view', [authenticateToken, authorizeUser], async(req, res)=>{
     };
 });
 
+
+router.get('/by-lecturer', [authenticateToken, authorizeLecturer], async (req, res) => {
+    try {
+        const courses = await getCourseByLecturer(req.body.lecturerEmsil);
+        if (courses.status == true) {
+            res.json({
+                msg: 'success',
+                courses: courses.info
+            });
+        } else {
+            res.json({
+                msg: 'failed'
+            });
+        }
+    } catch (err) {
+        res.json({
+            msg: 'error',
+            error: err.message
+        })
+    }
+});
+
+router.get('/by-department', [authenticateToken, authorizeUser], async (req, res) => {
+    try {
+        const courses = await getCourseByDepartment(req.query.department);
+        if (courses.status == true) {
+            res.json({
+                msg: 'success',
+                courses: courses.info
+            });
+        } else {
+            res.json({
+                msg: 'failed'
+            });
+        }
+    } catch (err) {
+        res.json({
+            msg: 'error',
+            error: err.message
+        })
+    }
+});
 
 router.put('/update-file-resource', [authenticateToken, authorizeLecturer, uploadDoc], async(req, res)=>{
     try {

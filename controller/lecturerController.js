@@ -8,11 +8,7 @@ export const createLecturer = async(data)=>{
             email: data.email,
             password: data.password,
             department: data.department,
-            faculty: data.faculty,
-	        program: data.program,
             levelsTaught: data.levelsTaught,
-            staffID: data.staffID,
-            assignedCourses: data.assignedCourses,
             hodApproval: 'pending',
             acctStatus: 'pending',
             role: 'lecturer'
@@ -86,12 +82,9 @@ export const getLecturerInfo = async(data)=>{
         } else {
             return {
                 username: res.dataValues.username,
-                staffID: res.dataValues.staffID,
                 levelsTaught: res.dataValues.levelsTaught,
                 department: res.dataValues.department,
                 faculty: res.dataValues.faculty,
-                program: res.dataValues.program,
-                assignedCourses: res.dataValues.assignedCourses
             };
         };
     } catch (err) {
@@ -116,7 +109,6 @@ export const getLecturersByDepartment = async(data)=>{
                 lecturerList.push(JSON.stringify({
                     email: res[i].dataValues.email,
                     username: res[i].dataValues.username,
-                    staffID: res[i].dataValues.staffID,
                     levelsTaught: res[i].dataValues.levelsTaught,
                     hodApproval: res[i].dataValues.hodApproval
                 }));
