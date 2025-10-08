@@ -32,6 +32,10 @@ const event = sequelize.define('events', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    eventLink: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     eventTime: {
         type: DataTypes.STRING,
         allowNull: false
