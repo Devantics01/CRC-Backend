@@ -60,6 +60,7 @@ export const createEvent = async (data) => {
             eventOwner: data.email,
             eventDate: data.eventDate,
             eventTime: data.eventTime,
+            eventLink: data.eventLink,
             eventMonth: data.eventMonth,
             visibility: data.visibility,
             eventStatus: 'pending',
