@@ -76,6 +76,7 @@ router.put('/update', [authenticateToken, authorizeAccStatus, authorizeUser], as
             eventDescription: req.body.eventDescription,
             eventDate: req.body.eventDate,
             eventLink: req.body.eventLink,
+            eventMonth: req.body.eventMonth,
             eventLocation: req.body.eventLocation,
             eventName: req.body.eventName,
             eventTime: req.body.eventTime,

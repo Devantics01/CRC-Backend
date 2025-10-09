@@ -156,6 +156,7 @@ export const updateEvent = async (data) => {
         await event.update({
             eventDescription: data.eventDescription,
             eventDate: data.eventDate,
+            eventMonth: data.eventMonth,
             eventLink: data.eventLink,
             eventLocation: data.eventLocation,
             eventName: data.eventName,
