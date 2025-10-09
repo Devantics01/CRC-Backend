@@ -60,6 +60,7 @@ export const createEvent = async (data) => {
             eventOwner: data.email,
             eventDate: data.eventDate,
             eventTime: data.eventTime,
+            eventLink: data.eventLink,
             eventMonth: data.eventMonth,
             visibility: data.visibility,
             eventStatus: 'pending',
@@ -94,6 +95,7 @@ export const getPublicEvents = async (month) => {
                     eventDate: response[index].dataValues.eventDate,
                     eventLocation: response[index].dataValues.eventLocation,
                     eventTime: response[index].dataValues.eventTime,
+                    eventLink: response[index].dataValues.eventLink,
                     eventOwner: response[index].dataValues.eventOwner,
                     eventID: response[index].dataValues.eventID,
                     eventStatus: response[index].dataValues.eventStatus
@@ -131,6 +133,7 @@ export const getPrivateEvents = async (month, email) => {
                     eventDate: response[index].dataValues.eventDate,
                     eventLocation: response[index].dataValues.eventLocation,
                     eventTime: response[index].dataValues.eventTime,
+                    eventLink: response[index].dataValues.eventLink,
                     eventOwner: response[index].dataValues.eventOwner,
                     eventID: response[index].dataValues.eventID,
                     eventStatus: response[index].dataValues.eventStatus
@@ -153,6 +156,7 @@ export const updateEvent = async (data) => {
         await event.update({
             eventDescription: data.eventDescription,
             eventDate: data.eventDate,
+            eventLink: data.eventLink,
             eventLocation: data.eventLocation,
             eventName: data.eventName,
             eventTime: data.eventTime
