@@ -5,7 +5,7 @@ import { createCourse, getCourse, getCourseByDepartment, getCourseByLecturer, up
 
 const router = express.Router();
 
-router.post('/new', [authenticateToken, authorizeHOD, authorizeLecturer, authorizeUser], async(req,res)=>{
+router.post('/new', [authenticateToken, authorizeHOD], async(req,res)=>{
     try {
         const courseCreated = await createCourse(
             {
