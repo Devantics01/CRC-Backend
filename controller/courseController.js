@@ -136,8 +136,8 @@ export const updateCourseInfo = async(data)=>{
     try {
         await course.update({
             course_name: data.newCourseName,
-            course_code: newCourseCode,
-            course_description: newCourseDescription
+            course_code: data.newCourseCode,
+            course_description: data.newCourseDescription
         }, {
             where: {
                 course_code: data.course_code
