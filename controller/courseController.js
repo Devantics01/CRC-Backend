@@ -29,7 +29,8 @@ export const getCourse = async(data)=>{
             course_name: res.dataValues.course_name,
             course_code: res.dataValues.course_code,
             course_description: res.dataValues.course_code,
-            lecturer: res.dataValues.lecturer,
+            LecturerEmail: res.dataValues.lecturer,
+            level: res.dataValues.level,
             resource_link: res.dataValues.resource_link,
             resourceApproval: res.dataValues.resourceApproval,
             assignment: res.dataValues.assignment
@@ -54,7 +55,8 @@ export const getCourseByDepartment = async(department)=>{
             }
             courseList.push({
                 course_name: res[index].dataValues.course_name,
-                lecturer: res[index].dataValues.lecturer,
+                LecturerEmail: res[index].dataValues.lecturer,
+                level: res[index].dataValues.level,
                 course_code: res[index].dataValues.course_code,
                 course_description: res[index].dataValues.course_description,
                 assignment: assignmentStatus,
@@ -83,7 +85,8 @@ export const getCourseByLecturer = async(lecturer)=>{
             }
             courseList.push({
                 course_name: res[index].dataValues.course_name,
-                lecturer: res[index].dataValues.lecturer,
+                LecturerEmail: res[index].dataValues.lecturer,
+                level: res[index].dataValues.level,
                 course_code: res[index].dataValues.course_code,
                 course_description: res[index].dataValues.course_description,
                 assignment: assignmentStatus,
@@ -149,7 +152,7 @@ export const updateCourseInfo = async(data)=>{
 export const approveCourseMaterial = async(data)=>{
     try {
         await course.update({
-            resource_link: data.resource_link
+            resourceApproval: 'approved'
         }, {
             where: {
                 course_code: data.course_code
