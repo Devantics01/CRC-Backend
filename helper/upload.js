@@ -1,10 +1,14 @@
 import multer from 'multer';
 import path from 'path';
+import { fileURLtoPath } from 'url';
 
+const __filename = import.meta.url;
+const __dirname = path.dirname(__filename);
+const parentDir = path.resolve(__dirname, '..');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, 'public/uploads'));
+        cb(null, path.join(parentDir, 'public/uploads'));
     },
     filename: function (req, file, cb) {
         console.log(req.body);
