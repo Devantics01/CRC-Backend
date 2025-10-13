@@ -1,9 +1,18 @@
 import multer from 'multer';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const currentFilePath = fileURLToPath(import.meta.url);
+const currentDirPath = path.dirname(currentFilePath);
+
+// To get a relative path from the current file's directory to another file:
+const targetFilePath = path.join(currentDirPath, '../uploads');
+const relativePath = path.relative(currentDirPath, targetFilePath);
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, '../public/uploads');
+        cb(null, relativePath);
     },
     filename: function (req, file, cb) {
         console.log(req.body);
