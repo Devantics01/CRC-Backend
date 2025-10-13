@@ -37,6 +37,7 @@ router.post('/new', [authenticateToken, authorizeHOD], async(req,res)=>{
 
 router.put('/upload', [authenticateToken, authorizeLecturer, checkHODApproval, uploadDoc], async(req, res)=>{
     try {
+        console.lgo(req.files);
         const fileLinks = req.files.map(file => {
         const relativePath = `/uploads/${file.filename}`;
         return relativePath;
