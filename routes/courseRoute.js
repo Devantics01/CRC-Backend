@@ -93,7 +93,7 @@ router.get('/view', [authenticateToken, authorizeUser], async(req, res)=>{
 
 router.get('/by-lecturer', [authenticateToken, authorizeLecturer], async (req, res) => {
     try {
-        const courses = await getCourseByLecturer(req.body.lecturerEmsil);
+        const courses = await getCourseByLecturer(req.body.lecturerEmail);
         if (courses.status == true) {
             res.json({
                 msg: 'success',
